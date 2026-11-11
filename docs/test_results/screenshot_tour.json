@@ -1,14 +1,14 @@
 {
 	"benchmark": {
 		"q0": {
-			"avg_fps": 64.2611680416225,
-			"min_fps": 60.5379677208952,
-			"ram_static_mb": 51.8918399810791
+			"avg_fps": 66.4192426877949,
+			"min_fps": 64.1648427216004,
+			"ram_static_mb": 51.8912715911865
 		},
 		"q2": {
-			"avg_fps": 10.9218826136316,
-			"min_fps": 9.92423179829727,
-			"ram_static_mb": 51.9136447906494
+			"avg_fps": 11.4517129254066,
+			"min_fps": 10.5918302859265,
+			"ram_static_mb": 51.9096164703369
 		}
 	},
 	"controls": {
@@ -49,17 +49,17 @@
 			"name": "escape_point"
 		},
 		{
-			"bytes": 468273,
+			"bytes": 455222,
 			"error": 0,
 			"name": "gameplay_hud"
 		},
 		{
-			"bytes": 29434,
+			"bytes": 29474,
 			"error": 0,
 			"name": "main_menu"
 		},
 		{
-			"bytes": 28688,
+			"bytes": 28591,
 			"error": 0,
 			"name": "main_menu_ar"
 		},
@@ -74,7 +74,7 @@
 			"name": "rooms"
 		},
 		{
-			"bytes": 23153,
+			"bytes": 23166,
 			"error": 0,
 			"name": "character_select"
 		},

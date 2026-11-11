@@ -31,8 +31,11 @@ func _ready() -> void:
 		"outfit": 3,
 	})
 	var me: MatardaPlayer = world.local_player()
-	me.global_position = Vector3(13.5, 0.2, 7.5)
-	me.yaw = atan2(-(20.0 - 13.5), -(-7.5 - 7.5))
+	me.global_position = Vector3(16.5, 0.2, 9.0)
+	me.yaw = atan2(-(20.0 - 16.5), -(-6.0 - 9.0))
+	for child in me.get_children():
+		if child is Label3D:
+			child.visible = false
 	camera.current = false
 	if me.camera():
 		me.camera().current = true
