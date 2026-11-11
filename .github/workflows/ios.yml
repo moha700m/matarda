@@ -26,6 +26,9 @@ jobs:
           sudo chmod +x /usr/local/bin/godot
           godot --version
 
+      - name: Import assets and register scripts
+        run: godot --headless --path . --import --quit
+
       - name: Run dedicated-server multiplayer test
         run: bash tools/mp_test.sh
 

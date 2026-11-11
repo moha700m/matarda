@@ -23,6 +23,9 @@ cleanup() {
 }
 trap cleanup EXIT
 
+echo "== MATARDA import =="
+"$GODOT" --headless --path "$ROOT" --import --quit
+
 echo "== MATARDA selftest =="
 "$GODOT" --headless --path "$ROOT" --log-file "$WORKDIR/selftest.log" -- --selftest
 cp "$WORKDIR/selftest.log" "$OUT/selftest.log" || true
