@@ -1,0 +1,87 @@
+{
+	"benchmark": {
+		"q0": {
+			"avg_fps": 64.2611680416225,
+			"min_fps": 60.5379677208952,
+			"ram_static_mb": 51.8918399810791
+		},
+		"q2": {
+			"avg_fps": 10.9218826136316,
+			"min_fps": 9.92423179829727,
+			"ram_static_mb": 51.9136447906494
+		}
+	},
+	"controls": {
+		"crouch_height": 1.04999995231628,
+		"crouch_ok": true,
+		"forward_m": 1.63033366203308,
+		"forward_ok": true,
+		"jump_m": 0.895277321338654,
+		"jump_ok": true,
+		"key_right": 0.851851880550385,
+		"mouse_look": 40.0,
+		"mouse_ok": true,
+		"stand_height": 1.70000004768372,
+		"stick_ok": true,
+		"stick_x": 0.851851880550385,
+		"strafe_m": 1.26726341247559,
+		"strafe_ok": true
+	},
+	"shots": [
+		{
+			"bytes": 510541,
+			"error": 0,
+			"name": "city_overview"
+		},
+		{
+			"bytes": 476870,
+			"error": 0,
+			"name": "police_station"
+		},
+		{
+			"bytes": 158896,
+			"error": 0,
+			"name": "bank_vault"
+		},
+		{
+			"bytes": 329490,
+			"error": 0,
+			"name": "escape_point"
+		},
+		{
+			"bytes": 468273,
+			"error": 0,
+			"name": "gameplay_hud"
+		},
+		{
+			"bytes": 29434,
+			"error": 0,
+			"name": "main_menu"
+		},
+		{
+			"bytes": 28688,
+			"error": 0,
+			"name": "main_menu_ar"
+		},
+		{
+			"bytes": 30264,
+			"error": 0,
+			"name": "settings"
+		},
+		{
+			"bytes": 32554,
+			"error": 0,
+			"name": "rooms"
+		},
+		{
+			"bytes": 23153,
+			"error": 0,
+			"name": "character_select"
+		},
+		{
+			"bytes": 29339,
+			"error": 0,
+			"name": "team_select"
+		}
+	]
+}

@@ -1,0 +1,9 @@
+.godot/
+build/
+*.tmp
+*.log
+export_credentials.cfg
+.DS_Store
+*.ipa
+*.xcarchive
+DerivedData/

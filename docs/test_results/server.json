@@ -1,0 +1,27 @@
+{
+	"carrier": "criminal-test-01",
+	"events": [
+		"hello:criminal-test-01 restored=false score=0",
+		"hello:police-test-0001 restored=false score=0",
+		"spawn:criminal-test-01 team=1",
+		"spawn:police-test-0001 team=0",
+		"hit",
+		"hit",
+		"disconnect:police-test-0001",
+		"robbery_start",
+		"loot_ready",
+		"loot",
+		"disconnect:criminal-test-01",
+		"hello:criminal-test-01 restored=true score=100",
+		"spawn:criminal-test-01 team=1",
+		"criminal_win"
+	],
+	"held": 1,
+	"loot_ready": false,
+	"net_errors": 0,
+	"phase": 2,
+	"players": 1,
+	"rejected_actions": 0,
+	"robbery": true,
+	"speed_clamps": 0
+}

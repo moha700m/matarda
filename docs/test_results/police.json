@@ -1,0 +1,16 @@
+{
+	"carrying": false,
+	"health": 100,
+	"live_cash": 0,
+	"live_score": 0,
+	"net_errors": 0,
+	"ok": true,
+	"reason": "",
+	"restored": false,
+	"role": "police",
+	"seen_health": 32,
+	"state": "done",
+	"team": -1,
+	"welcome_cash": 0,
+	"welcome_score": 0
+}
