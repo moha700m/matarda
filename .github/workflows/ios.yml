@@ -94,16 +94,34 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM="" \
             PROVISIONING_PROFILE_SPECIFIER="" \
+            DEPLOYMENT_POSTPROCESSING=YES \
+            STRIP_INSTALLED_PRODUCT=YES \
+            DEAD_CODE_STRIPPING=YES \
+            COPY_PHASE_STRIP=YES \
+            STRIP_STYLE=non-global \
             build
           APP="$(find build/ios/derived/Build/Products -type d -name '*.app' | head -n 1)"
           echo "APP=$APP"
           test -n "$APP"
+          BIN="$APP/$(basename "$APP" .app)"
+          test -f "$BIN"
+          echo "binary before strip:"
+          ls -lh "$BIN"
+          strip -x -S "$BIN"
+          echo "binary after strip -x -S:"
+          ls -lh "$BIN"
           rm -rf build/ipa
           mkdir -p build/ipa/Payload
           cp -R "$APP" build/ipa/Payload/
-          (cd build/ipa && zip -qry ../matarda.ipa Payload)
+          BIN_IN_PAYLOAD="build/ipa/Payload/$(basename "$APP")/$(basename "$APP" .app)"
+          test -f "$BIN_IN_PAYLOAD"
+          strip -x "$BIN_IN_PAYLOAD"
+          (cd build/ipa && zip -9 -y -r ../matarda.ipa Payload)
           ls -lh build/matarda.ipa
           unzip -l build/matarda.ipa | head
+          BYTES=$(stat -f%z build/matarda.ipa)
+          echo "ipa_bytes=$BYTES"
+          BYTES="$BYTES" python3 -c 'import os,sys; n=int(os.environ["BYTES"]); print("ipa_mb=%.2f" % (n/1_000_000)); sys.exit(0 if n < 24_000_000 else 1)'
 
       - name: Upload matarda.ipa
         uses: actions/upload-artifact@v4
