@@ -99,6 +99,7 @@ jobs:
             DEAD_CODE_STRIPPING=YES \
             COPY_PHASE_STRIP=YES \
             STRIP_STYLE=non-global \
+            IPHONEOS_DEPLOYMENT_TARGET=16.0 \
             build
           APP="$(find build/ios/derived/Build/Products -type d -name '*.app' | head -n 1)"
           echo "APP=$APP"
@@ -110,13 +111,22 @@ jobs:
           strip -x -S "$BIN"
           echo "binary after strip -x -S:"
           ls -lh "$BIN"
+          if [ -d "$APP/Frameworks" ]; then
+            find "$APP/Frameworks" -type f -name '*.dylib' -exec strip -x {} \;
+            if [ -f "$APP/Frameworks/libswift_Concurrency.dylib" ] && ! otool -L "$BIN" | grep -q 'libswift_Concurrency'; then
+              rm -f "$APP/Frameworks/libswift_Concurrency.dylib"
+              echo "removed unreferenced libswift_Concurrency.dylib"
+            fi
+          fi
+          echo "app contents:"
+          du -ah "$APP" | sort -h
           rm -rf build/ipa
           mkdir -p build/ipa/Payload
           cp -R "$APP" build/ipa/Payload/
           BIN_IN_PAYLOAD="build/ipa/Payload/$(basename "$APP")/$(basename "$APP" .app)"
           test -f "$BIN_IN_PAYLOAD"
           strip -x "$BIN_IN_PAYLOAD"
-          (cd build/ipa && zip -9 -y -r ../matarda.ipa Payload)
+          (cd build/ipa && zip -9 -X -y -r ../matarda.ipa Payload)
           ls -lh build/matarda.ipa
           unzip -l build/matarda.ipa | head
           BYTES=$(stat -f%z build/matarda.ipa)
