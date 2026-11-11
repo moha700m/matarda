@@ -158,10 +158,21 @@ func _draw() -> void:
 			fill = Color(0.85, 0.32, 0.08, 0.88 * alpha)
 		draw_circle(spec.at, spec.r, fill)
 		draw_arc(spec.at, spec.r, 0, TAU, 40, ring, 2.5, true)
-		var font := ThemeKit.font_bold()
-		if font:
-			var text := str(spec.label)
-			var fsize := 14 if str(name) != "shoot" else 16
-			var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_CENTER, -1, fsize).x
-			var pos: Vector2 = spec.at + Vector2(-width * 0.5, fsize * 0.35)
-			draw_string(font, pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize, Color(0.98, 0.96, 0.93, alpha))
+		_draw_icon(str(name), spec.at, float(spec.r) * 0.42, Color(0.98, 0.96, 0.93, alpha))
+
+func _draw_icon(kind: String, at: Vector2, s: float, color: Color) -> void:
+	match kind:
+		"shoot":
+			draw_arc(at, s * 0.85, 0, TAU, 20, color, 2.2, true)
+			draw_circle(at, s * 0.22, color)
+		"jump":
+			draw_polyline(PackedVector2Array([at + Vector2(-s, s * 0.35), at + Vector2(0, -s * 0.7), at + Vector2(s, s * 0.35)]), color, 3.0, true)
+		"crouch":
+			draw_polyline(PackedVector2Array([at + Vector2(-s, -s * 0.25), at + Vector2(0, s * 0.65), at + Vector2(s, -s * 0.25)]), color, 3.0, true)
+		"sprint":
+			draw_polyline(PackedVector2Array([at + Vector2(-s * 0.2, s * 0.55), at + Vector2(s * 0.55, 0), at + Vector2(-s * 0.2, -s * 0.55)]), color, 3.0, true)
+			draw_polyline(PackedVector2Array([at + Vector2(-s * 0.85, s * 0.55), at + Vector2(-s * 0.1, 0), at + Vector2(-s * 0.85, -s * 0.55)]), color, 3.0, true)
+		"interact":
+			draw_arc(at + Vector2(0, s * 0.15), s * 0.55, PI, TAU, 12, color, 2.4, true)
+			draw_line(at + Vector2(0, s * 0.15), at + Vector2(0, -s * 0.7), color, 2.4)
+			draw_line(at + Vector2(-s * 0.45, -s * 0.15), at + Vector2(s * 0.45, -s * 0.15), color, 2.4)

@@ -151,11 +151,9 @@ static func _bank(parent: Node3D, range_end: float) -> void:
 	for i in range(-2, 3):
 		_window(parent, Vector3(20 + i * 2.4, 2.4, -20.28), range_end)
 		_window(parent, Vector3(11.72, 2.4, -14 + i * 2.0), range_end)
-	# vault door
-	_mesh(parent, Vector3(20, 1.15, -19.45), Vector3(1.7, 2.3, 0.34), Color(0.72, 0.55, 0.22), true, true, false, 0, 0.35)
-	_mesh(parent, Vector3(20, 1.15, -19.25), Vector3(0.7, 0.7, 0.08), Color(0.95, 0.78, 0.35), false, false, false, 0, 0.25)
-	_label(parent, Vector3(20, 4.3, -7.2), "BANK", Color(0.98, 0.9, 0.75))
-	_label(parent, Vector3(20, 3.55, -7.2), "المصرف", Color(1.0, 0.62, 0.28))
+	_vault_room(parent)
+	_label(parent, Vector3(20, 4.35, -6.9), "BANK", Color(0.98, 0.94, 0.86))
+	_label(parent, Vector3(20, 3.7, -6.9), "المصرف", Color(1.0, 0.72, 0.32))
 
 static func _station(parent: Node3D, range_end: float) -> void:
 	var wall := Color(0.22, 0.32, 0.48)
@@ -234,10 +232,15 @@ static func _blocks(parent: Node3D, quality: int, range_end: float) -> void:
 		var roof: Color = roofs[index % roofs.size()]
 		var shadow := quality > 0
 		_mesh(parent, Vector3(spec.x, h * 0.5, spec.y), Vector3(w, h, d), wall, true, shadow, false, 0)
-		_mesh(parent, Vector3(spec.x, h + 0.18, spec.y), Vector3(w + 0.4, 0.36, d + 0.4), roof, false, shadow, false, 0)
-		if quality > 0:
-			for row in range(1, int(h / 2.0)):
-				_window(parent, Vector3(spec.x, 1.2 + row * 1.7, spec.y + d * 0.5 + 0.05), range_end)
+		_mesh(parent, Vector3(spec.x, h + 0.16, spec.y), Vector3(w + 0.55, 0.28, d + 0.55), roof, false, shadow, false, 0)
+		_mesh(parent, Vector3(spec.x, h - 0.08, spec.y), Vector3(w + 0.15, 0.12, d + 0.15), wall.darkened(0.18), false, false, false, 0)
+		var front_z: float = spec.y + d * 0.5 + 0.04
+		_mesh(parent, Vector3(spec.x, 1.15, front_z), Vector3(1.15, 2.1, 0.08), Color(0.2, 0.16, 0.14), false, false, true, range_end)
+		_mesh(parent, Vector3(spec.x, 2.35, front_z + 0.08), Vector3(1.8, 0.08, 0.35), roof, false, false, true, range_end)
+		var cols := maxi(2, int(w / 2.4))
+		for col in cols:
+			var wx: float = spec.x - w * 0.32 + float(col) * (w * 0.64 / float(maxi(1, cols - 1)))
+			_window(parent, Vector3(wx, h * 0.62, front_z), range_end)
 		index += 1
 
 static func _dressing(parent: Node3D, range_end: float) -> void:
@@ -253,9 +256,16 @@ static func _dressing(parent: Node3D, range_end: float) -> void:
 		if abs(i) > 1:
 			_tree(parent, Vector3(i * 7.0, 0, 11.2), range_end)
 	# parked cars clear of x=0, x=20 and x=-12 lanes
-	_car(parent, Vector3(-22, 0, 4.6), Color(0.7, 0.28, 0.22))
-	_car(parent, Vector3(30, 0, -4.8), Color(0.25, 0.32, 0.42))
-	_car(parent, Vector3(8, 0, 18), Color(0.85, 0.72, 0.35))
+	_car(parent, Vector3(-22, 0, 4.8), Color(0.72, 0.24, 0.18))
+	_car(parent, Vector3(30, 0, -4.6), Color(0.22, 0.32, 0.48))
+	_car(parent, Vector3(10, 0, 16), Color(0.86, 0.7, 0.28))
+	_bench(parent, Vector3(14, 0, 9.4), range_end)
+	_bench(parent, Vector3(-16, 0, 9.4), range_end)
+	_bench(parent, Vector3(26, 0, -5.6), range_end)
+	_traffic(parent, Vector3(7.4, 0, 7.4), range_end)
+	_traffic(parent, Vector3(-7.4, 0, 7.4), range_end)
+	_traffic(parent, Vector3(7.4, 0, -6.2), range_end)
+	_traffic(parent, Vector3(-7.4, 0, 6.6), range_end)
 
 static func _lamp(parent: Node3D, pos: Vector3, range_end: float) -> void:
 	_cyl(parent, pos + Vector3(0, 1.6, 0), 0.08, 3.2, Color(0.25, 0.25, 0.28), false, true, range_end)
@@ -289,8 +299,98 @@ static func _tree(parent: Node3D, pos: Vector3, range_end: float) -> void:
 	parent.add_child(crown)
 
 static func _car(parent: Node3D, pos: Vector3, color: Color) -> void:
-	_mesh(parent, pos + Vector3(0, 0.45, 0), Vector3(1.7, 0.55, 3.4), color, true, true, false, 0)
-	_mesh(parent, pos + Vector3(0, 0.9, -0.15), Vector3(1.5, 0.45, 1.6), color.lightened(0.15), false, true, false, 0)
+	_mesh(parent, pos + Vector3(0, 0.42, 0), Vector3(1.7, 0.48, 3.5), color, true, true, false, 0)
+	_mesh(parent, pos + Vector3(0, 0.88, -0.15), Vector3(1.45, 0.42, 1.55), color.lightened(0.12), false, true, false, 0)
+	_mesh(parent, pos + Vector3(0, 0.42, -1.72), Vector3(0.5, 0.16, 0.08), Color(0.95, 0.92, 0.7), false, false, false, 0)
+	_wheel(parent, pos + Vector3(-0.72, 0.22, 1.15))
+	_wheel(parent, pos + Vector3(0.72, 0.22, 1.15))
+	_wheel(parent, pos + Vector3(-0.72, 0.22, -1.15))
+	_wheel(parent, pos + Vector3(0.72, 0.22, -1.15))
+
+static func _wheel(parent: Node3D, pos: Vector3) -> void:
+	var mi := MeshInstance3D.new()
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = 0.22
+	mesh.bottom_radius = 0.22
+	mesh.height = 0.16
+	mesh.radial_segments = 10
+	mesh.material = _mat(Color(0.08, 0.08, 0.09), 0.7)
+	mi.mesh = mesh
+	mi.position = pos
+	mi.rotation_degrees = Vector3(0, 0, 90)
+	parent.add_child(mi)
+
+static func _bench(parent: Node3D, pos: Vector3, range_end: float) -> void:
+	var wood := Color(0.45, 0.3, 0.18)
+	_mesh(parent, pos + Vector3(0, 0.42, 0), Vector3(1.4, 0.08, 0.42), wood, false, false, true, range_end)
+	_mesh(parent, pos + Vector3(0, 0.72, 0.16), Vector3(1.4, 0.4, 0.08), wood, false, false, true, range_end)
+	_mesh(parent, pos + Vector3(-0.6, 0.28, 0), Vector3(0.08, 0.4, 0.4), Color(0.15, 0.15, 0.16), false, false, true, range_end)
+	_mesh(parent, pos + Vector3(0.6, 0.28, 0), Vector3(0.08, 0.4, 0.4), Color(0.15, 0.15, 0.16), false, false, true, range_end)
+
+static func _traffic(parent: Node3D, pos: Vector3, range_end: float) -> void:
+	_cyl(parent, pos + Vector3(0, 1.7, 0), 0.07, 3.4, Color(0.18, 0.18, 0.2), false, true, range_end)
+	_mesh(parent, pos + Vector3(0, 3.35, 0), Vector3(0.28, 0.72, 0.28), Color(0.1, 0.1, 0.12), false, false, true, range_end)
+	_emissive_sphere(parent, pos + Vector3(0, 3.55, -0.12), 0.07, Color(0.9, 0.15, 0.12), range_end)
+	_emissive_sphere(parent, pos + Vector3(0, 3.35, -0.12), 0.07, Color(0.9, 0.75, 0.15), range_end)
+	_emissive_sphere(parent, pos + Vector3(0, 3.15, -0.12), 0.07, Color(0.2, 0.75, 0.28), range_end)
+
+static func _emissive_sphere(parent: Node3D, pos: Vector3, radius: float, color: Color, range_end: float) -> void:
+	var mi := MeshInstance3D.new()
+	var mesh := SphereMesh.new()
+	mesh.radius = radius
+	mesh.height = radius * 2.0
+	mesh.radial_segments = 8
+	mesh.rings = 4
+	mesh.material = _mat(color, 0.35, color, 1.4)
+	mi.mesh = mesh
+	mi.position = pos
+	mi.visibility_range_end = range_end
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.add_to_group("detail_prop")
+	parent.add_child(mi)
+
+static func _vault_room(parent: Node3D) -> void:
+	_mesh(parent, Vector3(20, 0.045, -14.5), Vector3(14.5, 0.04, 9.5), Color(0.42, 0.36, 0.32), false, false, false, 0)
+	var door := MeshInstance3D.new()
+	var disc := CylinderMesh.new()
+	disc.top_radius = 1.05
+	disc.bottom_radius = 1.05
+	disc.height = 0.22
+	disc.radial_segments = 20
+	disc.material = _mat(Color(0.62, 0.5, 0.22), 0.32)
+	door.mesh = disc
+	door.position = Vector3(20, 1.25, -19.55)
+	door.rotation_degrees = Vector3(90, 0, 0)
+	parent.add_child(door)
+	var wheel := MeshInstance3D.new()
+	var ring := CylinderMesh.new()
+	ring.top_radius = 0.28
+	ring.bottom_radius = 0.28
+	ring.height = 0.08
+	ring.radial_segments = 12
+	ring.material = _mat(Color(0.85, 0.7, 0.28), 0.28)
+	wheel.mesh = ring
+	wheel.position = Vector3(20, 1.25, -19.38)
+	wheel.rotation_degrees = Vector3(90, 0, 0)
+	parent.add_child(wheel)
+	for bar in 6:
+		var bolt := MeshInstance3D.new()
+		var cyl := CylinderMesh.new()
+		cyl.top_radius = 0.06
+		cyl.bottom_radius = 0.06
+		cyl.height = 0.06
+		cyl.radial_segments = 8
+		cyl.material = _mat(Color(0.35, 0.28, 0.14), 0.4)
+		bolt.mesh = cyl
+		var ang := bar / 6.0 * TAU
+		bolt.position = Vector3(20 + cos(ang) * 0.72, 1.25 + sin(ang) * 0.72, -19.4)
+		bolt.rotation_degrees = Vector3(90, 0, 0)
+		parent.add_child(bolt)
+	_mesh(parent, Vector3(16.4, 0.28, -17.2), Vector3(0.9, 0.28, 0.55), Color(0.95, 0.78, 0.22), true, true, false, 0, 0.25)
+	_mesh(parent, Vector3(16.4, 0.52, -17.2), Vector3(0.7, 0.16, 0.4), Color(0.98, 0.84, 0.3), false, false, false, 0, 0.22)
+	_mesh(parent, Vector3(23.6, 0.18, -16.6), Vector3(0.7, 0.22, 0.45), Color(0.18, 0.55, 0.32), false, false, false, 0)
+	_mesh(parent, Vector3(23.6, 0.38, -16.6), Vector3(0.62, 0.16, 0.38), Color(0.22, 0.62, 0.36), false, false, false, 0)
+	_mesh(parent, Vector3(14.4, 0.55, -13.2), Vector3(1.3, 1.0, 2.4), Color(0.5, 0.4, 0.32), true, true, false, 0)
 
 static func _footprint_free(cx: float, cz: float, w: float, d: float) -> bool:
 	var min_x := cx - w * 0.5

@@ -48,11 +48,21 @@ func _build() -> void:
 	_objective.offset_top = 48
 	_objective.offset_bottom = 78
 	root.add_child(_objective)
+	var heart := HudIcon.new()
+	heart.kind = "heart"
+	heart.custom_minimum_size = Vector2(22, 22)
+	heart.size = Vector2(22, 22)
 	_health = ThemeKit.make_label("", 18, false, true)
+	_health.add_child(heart)
 	_health.set_anchors_preset(Control.PRESET_TOP_RIGHT if Locale.is_rtl() else Control.PRESET_TOP_LEFT)
 	_place_counter(_health, 196)
 	root.add_child(_health)
+	var coin := HudIcon.new()
+	coin.kind = "coin"
+	coin.custom_minimum_size = Vector2(22, 22)
+	coin.size = Vector2(22, 22)
 	_cash = ThemeKit.make_label("", 18, false, true)
+	_cash.add_child(coin)
 	_cash.set_anchors_preset(Control.PRESET_TOP_RIGHT if Locale.is_rtl() else Control.PRESET_TOP_LEFT)
 	_place_counter(_cash, 228)
 	root.add_child(_cash)
@@ -116,8 +126,8 @@ func _process(_delta: float) -> void:
 	_timer.text = "%02d:%02d" % [seconds / 60, seconds % 60]
 	_objective.text = Locale.t(world.objective_key(me))
 	if me:
-		_health.text = "%s  %d" % [Locale.t("health"), me.health]
-		_cash.text = "%s  %d    %s  %d" % [Locale.t("cash"), me.cash, Locale.t("score"), me.score]
+		_health.text = "    %d" % me.health
+		_cash.text = "    %d    %s %d" % [me.cash, Locale.t("score"), me.score]
 		var prompt: String = world.prompt_key(me)
 		_prompt.text = Locale.t(prompt) if prompt != "" else ""
 	else:
@@ -181,6 +191,23 @@ func _close_pause() -> void:
 	if pause_panel:
 		pause_panel.queue_free()
 		pause_panel = null
+
+class HudIcon extends Control:
+	var kind := "heart"
+
+	func _ready() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		position = Vector2(0, 2)
+
+	func _draw() -> void:
+		var c := ThemeKit.ORANGE if kind == "coin" else Color("FF5A5A")
+		if kind == "heart":
+			draw_circle(Vector2(7, 8), 5, c)
+			draw_circle(Vector2(14, 8), 5, c)
+			draw_colored_polygon(PackedVector2Array([Vector2(3, 10), Vector2(18, 10), Vector2(10.5, 20)]), c)
+		else:
+			draw_circle(Vector2(11, 11), 8, c)
+			draw_circle(Vector2(11, 11), 4, Color(0.55, 0.32, 0.08))
 
 func _refresh_static() -> void:
 	for child in get_children():

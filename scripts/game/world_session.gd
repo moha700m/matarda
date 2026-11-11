@@ -456,29 +456,30 @@ func _build_environment() -> void:
 	environment.background_mode = Environment.BG_SKY
 	var sky := Sky.new()
 	var sky_mat := ProceduralSkyMaterial.new()
-	sky_mat.sky_top_color = Color(0.16, 0.22, 0.46)
-	sky_mat.sky_horizon_color = Color(0.97, 0.46, 0.26)
-	sky_mat.ground_bottom_color = Color(0.16, 0.1, 0.1)
-	sky_mat.ground_horizon_color = Color(0.72, 0.36, 0.22)
-	sky_mat.sun_angle_max = 26.0
+	sky_mat.sky_top_color = Color(0.28, 0.38, 0.66)
+	sky_mat.sky_horizon_color = Color(0.98, 0.58, 0.36)
+	sky_mat.ground_bottom_color = Color(0.22, 0.16, 0.14)
+	sky_mat.ground_horizon_color = Color(0.62, 0.38, 0.28)
+	sky_mat.sun_angle_max = 18.0
 	sky.sky_material = sky_mat
 	environment.sky = sky
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
-	environment.ambient_light_energy = 0.72
-	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	environment.tonemap_exposure = 1.05
+	environment.ambient_light_energy = 0.48
+	environment.tonemap_mode = Environment.TONE_MAPPER_ACES
+	environment.tonemap_exposure = 0.95
 	environment.fog_enabled = true
-	environment.fog_light_color = Color(0.93, 0.52, 0.34)
-	environment.fog_density = 0.0075
-	environment.fog_aerial_perspective = 0.35
+	environment.fog_light_color = Color(0.86, 0.62, 0.5)
+	environment.fog_density = 0.0016
+	environment.fog_aerial_perspective = 0.12
+	environment.ssao_enabled = false
 	environment.glow_enabled = false
 	world_env.environment = environment
 	add_child(world_env)
 	sun = DirectionalLight3D.new()
 	sun.name = "Sun"
 	sun.rotation_degrees = Vector3(-32, -48, 0)
-	sun.light_color = Color(1.0, 0.78, 0.55)
-	sun.light_energy = 1.35
+	sun.light_color = Color(1.0, 0.86, 0.68)
+	sun.light_energy = 1.12
 	sun.shadow_enabled = Settings.quality > 0
 	sun.shadow_bias = 0.06
 	sun.shadow_normal_bias = 1.2
@@ -491,9 +492,13 @@ func on_quality_changed() -> void:
 		sun.shadow_blur = 0.0 if Settings.quality < 2 else 0.6
 	if environment:
 		environment.glow_enabled = Settings.quality >= 2
-		environment.glow_intensity = 0.28
-		environment.glow_bloom = 0.08
-		environment.fog_density = 0.004 if Settings.quality == 0 else 0.0075
+		environment.glow_intensity = 0.22
+		environment.glow_bloom = 0.05
+		environment.fog_density = 0.0012 if Settings.quality == 0 else 0.0018
+		environment.ssao_enabled = Settings.quality >= 2
+		environment.ssao_radius = 0.8
+		environment.ssao_intensity = 0.55
+		environment.ssao_power = 1.4
 	var far := Settings.detail_range()
 	for node in get_tree().get_nodes_in_group("detail_prop"):
 		if node is GeometryInstance3D:

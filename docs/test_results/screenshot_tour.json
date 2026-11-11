@@ -1,14 +1,14 @@
 {
 	"benchmark": {
 		"q0": {
-			"avg_fps": 66.4192426877949,
-			"min_fps": 64.1648427216004,
-			"ram_static_mb": 51.8912715911865
+			"avg_fps": 57.7493276683878,
+			"min_fps": 55.0044079921405,
+			"ram_static_mb": 53.167875289917
 		},
 		"q2": {
-			"avg_fps": 11.4517129254066,
-			"min_fps": 10.5918302859265,
-			"ram_static_mb": 51.9096164703369
+			"avg_fps": 9.41695721226893,
+			"min_fps": 9.38472687837915,
+			"ram_static_mb": 53.1920986175537
 		}
 	},
 	"controls": {
@@ -29,37 +29,37 @@
 	},
 	"shots": [
 		{
-			"bytes": 510541,
+			"bytes": 535172,
 			"error": 0,
 			"name": "city_overview"
 		},
 		{
-			"bytes": 476870,
+			"bytes": 515139,
 			"error": 0,
 			"name": "police_station"
 		},
 		{
-			"bytes": 158896,
+			"bytes": 165668,
 			"error": 0,
 			"name": "bank_vault"
 		},
 		{
-			"bytes": 329490,
+			"bytes": 301869,
 			"error": 0,
 			"name": "escape_point"
 		},
 		{
-			"bytes": 455222,
+			"bytes": 425240,
 			"error": 0,
 			"name": "gameplay_hud"
 		},
 		{
-			"bytes": 29474,
+			"bytes": 52309,
 			"error": 0,
 			"name": "main_menu"
 		},
 		{
-			"bytes": 28591,
+			"bytes": 50840,
 			"error": 0,
 			"name": "main_menu_ar"
 		},
@@ -74,12 +74,12 @@
 			"name": "rooms"
 		},
 		{
-			"bytes": 23166,
+			"bytes": 22703,
 			"error": 0,
 			"name": "character_select"
 		},
 		{
-			"bytes": 29339,
+			"bytes": 29204,
 			"error": 0,
 			"name": "team_select"
 		}

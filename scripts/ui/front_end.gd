@@ -9,6 +9,7 @@ var screen_name := ""
 var _root: Control
 var _status: Label
 var _preview: Node3D
+var _menu_actors: Array = []
 var _ip := "127.0.0.1"
 var _port := 7777
 var _selected_room := 0
@@ -20,18 +21,26 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if _preview:
 		_preview.rotate_y(delta * 0.7)
+	var tick := Time.get_ticks_msec() / 1000.0
+	for actor in _menu_actors:
+		if actor is Node3D:
+			CharacterMesh.pose(actor, 0.2, tick, false)
 
 func show_screen(name: String) -> void:
 	screen_name = name
+	_menu_actors.clear()
+	_preview = null
 	if _root:
 		_root.queue_free()
-		_preview = null
 	_root = Control.new()
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.layout_direction = Locale.layout()
 	_root.theme = ThemeKit.make_theme()
 	add_child(_root)
-	ThemeKit.backdrop(_root)
+	if name == "main":
+		_add_menu_scene(_root)
+	else:
+		ThemeKit.backdrop(_root)
 	match name:
 		"main":
 			_screen_main()
@@ -62,11 +71,80 @@ func _center_panel(width: float = 520) -> VBoxContainer:
 	panel.add_child(box)
 	return box
 
+func _add_menu_scene(parent: Control) -> void:
+	var holder := SubViewportContainer.new()
+	holder.set_anchors_preset(Control.PRESET_FULL_RECT)
+	holder.stretch = true
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(holder)
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(1280, 720)
+	viewport.own_world_3d = true
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	holder.add_child(viewport)
+	var root := Node3D.new()
+	viewport.add_child(root)
+	var world_env := WorldEnvironment.new()
+	var env := Environment.new()
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color(0.72, 0.48, 0.38)
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.55, 0.48, 0.5)
+	env.ambient_light_energy = 0.45
+	env.tonemap_mode = Environment.TONE_MAPPER_ACES
+	world_env.environment = env
+	root.add_child(world_env)
+	var sun := DirectionalLight3D.new()
+	sun.rotation_degrees = Vector3(-28, -40, 0)
+	sun.light_color = Color(1.0, 0.82, 0.62)
+	sun.light_energy = 1.3
+	root.add_child(sun)
+	var ground := MeshInstance3D.new()
+	var plane := BoxMesh.new()
+	plane.size = Vector3(16, 0.2, 10)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(0.28, 0.24, 0.22)
+	plane.material = mat
+	ground.mesh = plane
+	ground.position = Vector3(0, -0.1, 0)
+	root.add_child(ground)
+	var police := CharacterMesh.build(2, MatchRules.Team.POLICE)
+	police.position = Vector3(-3.3, 0, 0.4)
+	police.rotation.y = PI * 0.85
+	police.scale = Vector3(1.25, 1.25, 1.25)
+	root.add_child(police)
+	var criminal := CharacterMesh.build(0, MatchRules.Team.CRIMINAL)
+	criminal.position = Vector3(3.3, 0, 0.4)
+	criminal.rotation.y = -PI * 0.85
+	criminal.scale = Vector3(1.25, 1.25, 1.25)
+	root.add_child(criminal)
+	var left_wall := MeshInstance3D.new()
+	var block := BoxMesh.new()
+	block.size = Vector3(2.2, 2.4, 1.4)
+	var left_mat := StandardMaterial3D.new()
+	left_mat.albedo_color = Color(0.2, 0.3, 0.55)
+	block.material = left_mat
+	left_wall.mesh = block
+	left_wall.position = Vector3(-4.2, 1.2, -1.6)
+	root.add_child(left_wall)
+	var right_wall := MeshInstance3D.new()
+	var block_r := BoxMesh.new()
+	block_r.size = Vector3(2.4, 2.8, 1.6)
+	var right_mat := StandardMaterial3D.new()
+	right_mat.albedo_color = Color(0.78, 0.62, 0.42)
+	block_r.material = right_mat
+	right_wall.mesh = block_r
+	right_wall.position = Vector3(4.3, 1.4, -1.8)
+	root.add_child(right_wall)
+	_menu_actors = [police, criminal]
+	var camera := Camera3D.new()
+	root.add_child(camera)
+	camera.look_at_from_position(Vector3(0, 1.35, 5.6), Vector3(0, 1.05, 0))
+
 func _screen_main() -> void:
 	var box := _center_panel(480)
 	box.add_child(ThemeKit.make_label(Locale.t("title"), 54, true, true))
 	box.add_child(ThemeKit.make_label(Locale.t("tagline"), 18, true, false))
-	_add_hero(box)
 	var name_edit := LineEdit.new()
 	name_edit.placeholder_text = Locale.t("guest_name")
 	name_edit.text = Settings.player_name
@@ -341,7 +419,7 @@ func _character_view(parent: Node, outfit: int, team: int) -> Node3D:
 	root.add_child(world_env)
 	var camera := Camera3D.new()
 	root.add_child(camera)
-	camera.look_at_from_position(Vector3(1.35, 1.35, 2.15), Vector3(0, 1.0, 0))
+	camera.look_at_from_position(Vector3(0.85, 1.25, -2.15), Vector3(0, 1.15, 0))
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-28, -50, 0)
 	light.light_color = Color(1.0, 0.78, 0.55)
